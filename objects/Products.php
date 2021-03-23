@@ -2,7 +2,7 @@
 
 class Product {
 
-    private $databse_connection;
+    private $database_connection;
     private $name;
     private $description;
     private $image;
@@ -10,14 +10,14 @@ class Product {
     private $price;
 
     function __construct($db) {
-        $this->databse_connection=$db;
+        $this->database_connection = $db;
     }
 
     function addProduct($name_IN,$description_IN,$image_IN,$category_IN,$price_IN) {
         if(!empty($name_IN)&& !empty($description_IN)&& !empty($image_IN)&& !empty($category_IN)&& !empty($price_IN)){
 
             $sql = "INSERT INTO products (name,description,image,category,price) VALUES(:name_IN, :description_IN, :image_IN, :category_IN, :price_IN)";
-            $stmt = $this->databse_connection->prepare($sql);
+            $stmt = $this->database_connection->prepare($sql);
             $stmt->bindParam(":name_IN", $name_IN);
             $stmt->bindParam(":description_IN", $description_IN);
             $stmt->bindParam(":image_IN", $image_IN);
@@ -41,10 +41,11 @@ class Product {
 
     function deleteProduct($productId) {
         $sql = "DELETE FROM products WHERE id = :productId_IN";
-        $stmt = $this->databse_connection->prepare($sql);
+        $stmt = $this->database_connection->prepare($sql);
         $stmt->bindParam(":productId_IN", $productId);
         $stmt->execute();
 
+        
         $response = new stdClass();
                 if($stmt->rowCount() > 0) {
                     $response->text = "Product with id $productId removed!";
@@ -60,14 +61,14 @@ class Product {
     
     function listProducts() {
         $sql = "SELECT name, description, image, category, price FROM products";
-        $stmt = $this->databse_connection->prepare($sql);
+        $stmt = $this->database_connection->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     function showSpecific($productId) {
         $sql = "SELECT name, description, image, category, price FROM products WHERE id = :id_IN";
-        $stmt = $this->databse_connection->prepare($sql);
+        $stmt = $this->database_connection->prepare($sql);
         $stmt->bindParam(":id_IN", $productId);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -104,7 +105,7 @@ class Product {
 
     function UpdateName($id, $name) {
         $sql = "UPDATE products SET name = :name_IN WHERE id = :id_IN";
-        $stmt = $this->databse_connection->prepare($sql);
+        $stmt = $this->database_connection->prepare($sql);
         $stmt->bindParam(":id_IN",$id);
         $stmt->bindParam(":name_IN",$name);
         $stmt->execute();
@@ -118,7 +119,7 @@ class Product {
     }
     function UpdateDescription($id, $description) {
         $sql = "UPDATE products SET description = :description_IN WHERE id = :id_IN";
-        $stmt = $this->databse_connection->prepare($sql);
+        $stmt = $this->database_connection->prepare($sql);
         $stmt->bindParam(":id_IN",$id);
         $stmt->bindParam(":description_IN",$description);
         $stmt->execute();
@@ -132,7 +133,7 @@ class Product {
     }
     function UpdateImage($id, $image) {
         $sql = "UPDATE products SET image = :image_IN WHERE id = :id_IN";
-        $stmt = $this->databse_connection->prepare($sql);
+        $stmt = $this->database_connection->prepare($sql);
         $stmt->bindParam(":id_IN",$id);
         $stmt->bindParam(":image_IN",$image);
         $stmt->execute();
@@ -146,7 +147,7 @@ class Product {
     }
     function UpdateCategory($id, $category) {
         $sql = "UPDATE products SET category = :category_IN WHERE id = :id_IN";
-        $stmt = $this->databse_connection->prepare($sql);
+        $stmt = $this->database_connection->prepare($sql);
         $stmt->bindParam(":id_IN",$id);
         $stmt->bindParam(":category_IN",$category);
         $stmt->execute();
@@ -160,7 +161,7 @@ class Product {
     }
     function UpdatePrice($id, $price) {
         $sql = "UPDATE products SET price = :price_IN WHERE id = :id_IN";
-        $stmt = $this->databse_connection->prepare($sql);
+        $stmt = $this->database_connection->prepare($sql);
         $stmt->bindParam(":id_IN",$id);
         $stmt->bindParam(":price_IN",$price);
         $stmt->execute();
@@ -171,5 +172,19 @@ class Product {
         else {
             return "Successfull edit!";
         }
+    }
+
+    function showByCat($category_IN){
+        $sql = "SELECT * FROM products WHERE category LIKE :category_IN";
+        $stmt = $this->database_connection->prepare($sql);
+        $stmt->bindParam(":category_IN", $category_IN);
+        $stmt->execute();
+        $productCount = $stmt->rowCount();
+        if($productCount = 0) {
+            echo "No products of this category found!";
+            die();
+        }
+        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return json_encode($row);
     }
 }
