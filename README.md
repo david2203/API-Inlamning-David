@@ -36,7 +36,7 @@ CONSTRAINT FKproductsId FOREIGN KEY(productId) REFERENCES products(id),
 CONSTRAINT FKusersId FOREIGN KEY(userId) REFERENCES users(id)
 ) ENGINE = innoDB;
 
-CREATE TABLE session (
+CREATE TABLE sessions (
 id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 userId INT NOT NULL,
 token text NOT NULL,
