@@ -18,10 +18,10 @@ class Cart {
         $productCount = $stmt->rowCount();
         if($productCount = 0) {
             $error = new stdClass();
-            $error->message="Tere is no product with this id in our database!";
-            $error->code="0008";
-            print_r(json_encode($error));
-            die();
+                $error->message = "Id not found!";
+                $error->code = "0003";
+                echo json_encode($error);
+                die();
         }
 
         $sql = "INSERT INTO cart (productId,userId,token,quantity,orderdate) VALUES(:productId_IN, :userId_IN, :token_IN, :quantity_IN, NOW())";
@@ -30,11 +30,14 @@ class Cart {
         $stmt->bindParam(":userId_IN",$userId_IN);
         $stmt->bindParam(":quantity_IN",$quantity_IN);
         $stmt->bindParam(":token_IN",$token_IN);
-        $stmt->execute();
-        // if(!$stmt->execute()) {
-        //     echo "couldnt execute!";
-        //     die();
-        // }
+        
+        if(!$stmt->execute()) {
+            $error = new stdClass();
+                $error->message = "Id not found!";
+                $error->code = "0003";
+                echo json_encode($error);
+                die();
+        }
         return " $quantity_IN x of the product with id $productId_IN was added to your cart!";
 
     }

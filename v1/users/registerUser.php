@@ -8,7 +8,7 @@ if(isset($_GET['username']) && isset($_GET['email']) && isset($_GET['password'])
     $password = $_GET['password'];
 } else{
     $error = new stdClass();
-    $error->message="No specified data for registration";
+    $error->message="Not enough specified data for registration";
     $error->code="0006";
     print_r(json_encode($error));
     die();

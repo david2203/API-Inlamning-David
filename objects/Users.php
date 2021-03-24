@@ -21,13 +21,19 @@ class User {
             $stmt->bindParam(":email_IN", $email_IN);
             
             if(!$stmt->execute()) {
-                echo "Couldnt execute sql!";
-                die();
+                $error = new stdClass();
+                    $error -> message = "Sql failed to execute!";
+                    $error -> code = "0006";
+                    print_r(json_encode($error));
+                    die();
             } 
             $affected = $stmt->rowCount();
             if($affected > 0) {
-                echo "Username or email is already registered!";
-                die();
+                $error = new stdClass();
+                    $error -> message = "Username or email already exist!";
+                    $error -> code = "0007";
+                    print_r(json_encode($error));
+                    die();
             }
             $sql = "INSERT INTO users (username, email, password, role) VALUES(:username_IN, :email_IN, :password_IN, :role_IN)";
             $stmt = $this->database_connection->prepare($sql);
@@ -64,6 +70,12 @@ class User {
         if($stmt->rowCount() == 1) {
             $row = $stmt->fetch();
             return $this->createToken($row['id'],$row['username']);
+        } else {
+            $error = new stdClass();
+                $error->message = "Wrong username or password!";
+                $error->code = "0004";
+                echo json_encode($error);
+                die();
         }
 
     }

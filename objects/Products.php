@@ -31,8 +31,8 @@ class Product {
             
         } else {
             $error = new stdClass();
-                $error->message = "A product needs a Name, description, image category and a price to be created!";
-                $error->code = "0001";
+                $error->message="Not enough specified data to add a product";
+                $error->code="0006";
                 print_r(json_encode($error));
                 die();
         }
@@ -71,7 +71,9 @@ class Product {
         $stmt = $this->database_connection->prepare($sql);
         $stmt->bindParam(":id_IN", $productId);
         $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if($stmt->rowCount()>0){
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $this->name = $row['name'];
             $this->description = $row['description'];
             $this->image = $row['image'];
@@ -79,6 +81,14 @@ class Product {
             $this->price = $row['price'];
 
             return $row;
+        } else {
+            $error = new stdClass();
+                $error->message = "Id not found!";
+                $error->code = "0003";
+                echo json_encode($error);
+                die();
+        }
+      
     }
 
     function editProduct($id, $name ="", $description = "", $image = "", $category = "", $price = "") {

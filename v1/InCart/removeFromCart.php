@@ -9,7 +9,7 @@
     } else {
         $error = new stdClass();
         $error->message = "No token specified!";
-        $error->code = "0009";
+        $error->code = "0005";
         print_r(json_encode($error));
         die();
     }
