@@ -17,3 +17,5 @@ orderdate DATE NOT NULL,
 CONSTRAINT FKproductsId FOREIGN KEY(productId) REFERENCES products(id),
 CONSTRAINT FKusersId FOREIGN KEY(userId) REFERENCES users(id)
 ) ENGINE = innoDB;
+
+CREATE TABLE session ( id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, userId INT NOT NULL, token text NOT NULL, last_used INT NOT NULL ) ENGINE = InnoDB;
