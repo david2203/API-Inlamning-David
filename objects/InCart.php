@@ -9,7 +9,7 @@ class Cart {
         $this->database_connection = $db;
     }
 
-    function productToUsercart($productId_IN,$userId_IN,$quantity_IN) {
+    function productToUsercart($productId_IN,$userId_IN,$token_IN,$quantity_IN) {
 
         $sql = "SELECT * FROM products WHERE id = :productId_IN";
         $stmt = $this->database_connection->prepare($sql);
@@ -17,21 +17,25 @@ class Cart {
         $stmt->execute();
         $productCount = $stmt->rowCount();
         if($productCount = 0) {
-            echo "Tere is no product with this id in our database!";
+            $error = new stdClass();
+            $error->message="Tere is no product with this id in our database!";
+            $error->code="0008";
+            print_r(json_encode($error));
             die();
         }
 
-        $sql = "INSERT INTO cart (productId,userId,quantity,orderdate) VALUES(:productId_IN, :userId_IN, :quantity_IN, NOW())";
+        $sql = "INSERT INTO cart (productId,userId,token,quantity,orderdate) VALUES(:productId_IN, :userId_IN, :token_IN, :quantity_IN, NOW())";
         $stmt = $this->database_connection->prepare($sql);
         $stmt->bindParam(":productId_IN",$productId_IN);
         $stmt->bindParam(":userId_IN",$userId_IN);
         $stmt->bindParam(":quantity_IN",$quantity_IN);
-        
-        if(!$stmt->execute()) {
-            echo "couldnt execute!";
-            die();
-        }
-        echo " $quantity_IN x of the product with id $productId_IN was added to your cart!";
+        $stmt->bindParam(":token_IN",$token_IN);
+        $stmt->execute();
+        // if(!$stmt->execute()) {
+        //     echo "couldnt execute!";
+        //     die();
+        // }
+        return " $quantity_IN x of the product with id $productId_IN was added to your cart!";
 
     }
 
@@ -47,6 +51,16 @@ class Cart {
         }
         
         echo "Product with id $productId_IN was removed from your cart!";
+    }
+
+    function checkoutCart($token_IN) {
+        $sql ="DELETE FROM cart WHERE token = :token_IN";
+        $stmt=$this->database_connection->prepare($sql);
+        $stmt->bindParam(":token_IN",$token_IN);
+
+        if($stmt->execute()) {
+            return "Purchase complete!";
+        }
     }
     
 
