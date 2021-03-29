@@ -12,7 +12,7 @@ class User {
         $this->database_connection = $db;
     }
 
-    function addUser($username_IN,$email_IN,$password_IN,$role_IN = "user") {
+    function AddUser($username_IN,$email_IN,$password_IN,$role_IN = "user") {
         if(!empty($username_IN) && !empty($email_IN)&& !empty($password_IN)) {
 
             $sql = "SELECT username, email FROM users WHERE username=:username_IN OR email=:email_IN ";
@@ -59,7 +59,7 @@ class User {
 
     }
 
-    function login($username_IN,$password_IN) {
+    function LoginUser($username_IN,$password_IN) {
         $sql = "SELECT id, username, email, role FROM users WHERE username=:username_IN AND password=:password_IN";
         $stmt=$this->database_connection->prepare($sql);
         $stmt->bindParam(":username_IN",$username_IN);
@@ -69,7 +69,7 @@ class User {
 
         if($stmt->rowCount() == 1) {
             $row = $stmt->fetch();
-            return $this->createToken($row['id'],$row['username']);
+            return $this->CreateToken($row['id'],$row['username']);
         } else {
             $error = new stdClass();
                 $error->message = "Wrong username or password!";
@@ -80,7 +80,7 @@ class User {
 
     }
 
-    function createToken($id, $username) {
+    function CreateToken($id, $username) {
 
         $checked_token = $this->checkToken($id);
 
@@ -102,7 +102,7 @@ class User {
 
     }
 
-    function checkToken($id) {
+    function CheckToken($id) {
         $sql = "SELECT token, last_used FROM sessions WHERE userId=:userId_IN AND last_used > :active_time_IN";
         $stmt =$this->database_connection->prepare($sql);
         $stmt->bindParam(":userId_IN",$id);
@@ -121,7 +121,7 @@ class User {
         }
     }
 
-    function isTokenValid($token) {
+    function IsTokenValid($token) {
         $sql = "SELECT token, last_used FROM sessions WHERE token=:token_IN AND last_used > :active_time_IN";
         $stmt =$this->database_connection->prepare($sql);
         $stmt->bindParam(":token_IN",$token);
@@ -133,7 +133,7 @@ class User {
         $return = $stmt->fetch();
 
         if(isset($return['token'])){
-            $this->updateToken($return['token']);
+            $this->UpdateToken($return['token']);
 
             return true;
         }
@@ -142,7 +142,7 @@ class User {
         }
     }
 
-    function updateToken($token) {
+    function UpdateToken($token) {
         $sql = "UPDATE sessions SET last_used=:last_used_IN WHERE token=:token_IN";
         $stmt = $this->database_connection->prepare($sql);
         $time = time();

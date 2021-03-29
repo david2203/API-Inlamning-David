@@ -37,5 +37,5 @@ if(isset($_GET['price'])) {
 }
 
 $product = new Product($pdo);
-echo json_encode($product->editProduct($id,$name,$description,$image,$category,$price));
+echo json_encode($product->EditProduct($id,$name,$description,$image,$category,$price));
 ?>

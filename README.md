@@ -1,5 +1,14 @@
 # API-Inlamning-David
 
+Welcome to Davids API system! Before using this service please go to your database editor and create a databse with the sql question that you can find below! After you have done that you can start using the service by following the following instructions: 
+1. Go to your webb browser and type http://localhost/API_Inla%CC%88mning/v1/
+2. Then you can use the php functions that are in the v1 folder by adding them after the url above in the webbrowser! The functions differ between user related, product related and cart related!
+3. You will have to add different kinds of information according to what function you have selected in order for them to work! This is done by setting GET variables in the url after the selected function!
+4. Now you should have all means to user all the existing functions with ease :) but keep in mind that the prefered order to use this API is if you start by registering, then logging in, then adding a few products and at the end fullfill a purchase by adding and removing products from your cart and then checkout wanted items. Enjoy!
+
+
+SQL questions starts here: 
+
 DROP DATABASE IF EXISTS APIendpoints; CREATE DATABASE APIendpoints;
 
 DROP TABLE IF EXISTS sessions;

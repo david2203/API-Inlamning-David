@@ -9,7 +9,7 @@ if(isset($_GET['name']) && isset($_GET['description']) && isset($_GET['imageurl'
     $category = $_GET['category'];
     $price = $_GET['price'];
     $product  = new Product($pdo);
-    $product->addProduct($name,$description,$imageurl,$category,$price);
+    print_r(json_encode($product->AddProduct($name,$description,$imageurl,$category,$price)));
 } else  {
     $error = new stdClass();
     $error->message="Not enough specified data for addition of product!";

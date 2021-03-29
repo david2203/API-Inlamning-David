@@ -8,7 +8,7 @@ if(isset($_GET['username'])&&isset($_GET['password'])){
 
     $user = new User($pdo);
     $return = new stdClass();
-    $return->token = $user->login($username, $password);
+    $return->token = $user->LoginUser($username, $password);
     print_r(json_encode($return));
 } else {
     $error = new stdClass();

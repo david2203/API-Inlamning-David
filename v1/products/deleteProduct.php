@@ -5,7 +5,7 @@ include("../../objects/Products.php");
 $product  = new Product($pdo);
 
 if(!empty($_GET['id'])){
-    echo json_encode($product->deleteProduct($_GET['id']));
+    echo json_encode($product->DeleteProduct($_GET['id']));
 } else {
     $error = new stdClass();
     $error->message = "Id not specified";

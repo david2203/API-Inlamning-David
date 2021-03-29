@@ -9,16 +9,43 @@ class Cart {
         $this->database_connection = $db;
     }
 
-    function productToUsercart($productId_IN,$userId_IN,$token_IN,$quantity_IN) {
+    function ProductToUsercart($productId_IN,$userId_IN,$token_IN,$quantity_IN) {
+
+        $sql = "SELECT * FROM cart WHERE userId = :userId_IN AND productId = :productId_IN";
+        $stmt = $this->database_connection->prepare($sql);
+        $stmt->bindParam(":userId_IN", $userId_IN);
+        $stmt->bindParam(":productId_IN", $productId_IN);
+        $stmt->execute();
+        if($stmt->rowCount() > 0) {
+            $error = new stdClass();
+                $error->message = "You have already added this product to your cart!";
+                $error->code = "0009";
+                echo json_encode($error);
+                die();
+        }
+
+        $sql = "SELECT * FROM users WHERE id = :userId_IN";
+        $stmt = $this->database_connection->prepare($sql);
+        $stmt->bindParam(":userId_IN", $userId_IN);
+        $stmt->execute();
+        $userCount = $stmt->rowCount();
+        if($userCount < 1) {
+            $error = new stdClass();
+                $error->message = "User not found!";
+                $error->code = "0003";
+                echo json_encode($error);
+                die();
+        }
+        
 
         $sql = "SELECT * FROM products WHERE id = :productId_IN";
         $stmt = $this->database_connection->prepare($sql);
         $stmt->bindParam(":productId_IN", $productId_IN);
         $stmt->execute();
         $productCount = $stmt->rowCount();
-        if($productCount = 0) {
+        if($productCount < 1) {
             $error = new stdClass();
-                $error->message = "Id not found!";
+                $error->message = "Product id not found!";
                 $error->code = "0003";
                 echo json_encode($error);
                 die();
@@ -42,21 +69,33 @@ class Cart {
 
     }
 
-    function removeFromCart($userId_IN, $productId_IN){
+    function RemoveFromCart($userId_IN, $productId_IN){
+
+        $sql = "SELECT * FROM cart WHERE userId = :userId_IN AND productId = :productId_IN";
+        $stmt = $this->database_connection->prepare($sql);
+        $stmt->bindParam(":productId_IN", $productId_IN);
+        $stmt->bindParam(":userId_IN", $userId_IN);
+        $stmt->execute();
+        if($stmt->rowCount() < 1) {
+            $error = new stdClass();
+                $error->message = "The user with id $userId_IN doesnt have the product with id $productId_IN in their cart!";
+                $error->code = "0003";
+                echo json_encode($error);
+                die();
+        }
+
         $sql = "DELETE FROM cart WHERE userId = :userId_IN AND productId = :productId_IN";
         $stmt = $this->database_connection->prepare($sql);
         $stmt->bindParam(":userId_IN", $userId_IN);
         $stmt->bindParam(":productId_IN", $productId_IN);
-
-        if(!$stmt->execute()) {
-            echo "didnt work";
-            die();
-        }
+        $stmt->execute();
         
-        echo "Product with id $productId_IN was removed from your cart!";
+        $response =  new stdClass();
+        $response->text= "Product with id $productId_IN was removed from your cart!";
+        return $response;   
     }
 
-    function checkoutCart($token_IN) {
+    function CheckoutCart($token_IN) {
         $sql ="DELETE FROM cart WHERE token = :token_IN";
         $stmt=$this->database_connection->prepare($sql);
         $stmt->bindParam(":token_IN",$token_IN);

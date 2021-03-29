@@ -16,11 +16,19 @@
 
 $user = new User($pdo);
 $cart = new Cart($pdo);
-    if($user->isTokenValid($token)) {
-        $userId =$_GET['userId'];
-        $productId =$_GET['productId'];
-        $cart = new Cart($pdo);
-        $cart->removeFromCart($userId,$productId);
+    if($user->IsTokenValid($token)) {
+        if(isset($_GET['userId']) & isset($_GET['productId'])){
+            $userId =$_GET['userId'];
+            $productId =$_GET['productId'];
+            $cart = new Cart($pdo);
+            print_r(json_encode($cart->RemoveFromCart($userId,$productId)));
+        } else {
+            $error = new stdClass();
+            $error->message = "Product id or User id not specified";
+            $error->code = "0002";
+            echo json_encode($error);
+            die();
+        }
         
     
     } else {

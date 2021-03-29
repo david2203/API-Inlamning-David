@@ -5,7 +5,7 @@ include("../../objects/Products.php");
 $product = new Product($pdo);
 
 if(!empty($_GET['id'])) {
-    echo json_encode($product->showSpecific($_GET['id']));
+    echo json_encode($product->ShowSpecific($_GET['id']));
 
 } else {
     $error = new stdClass();

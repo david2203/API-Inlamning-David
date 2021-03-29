@@ -5,7 +5,7 @@ include('../../objects/Products.php');
 if(isset($_GET['category'])){
     $category = $_GET['category'];
     $product = new Product($pdo);
-    print_r($product->showByCat($category));
+    print_r(json_encode($product->ShowByCat($category)));
 } else {
     $error = new stdClass();
     $error->message="Category not specified!";

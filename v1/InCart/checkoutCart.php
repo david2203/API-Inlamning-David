@@ -16,7 +16,7 @@ $token = "";
 
 $user = new User($pdo);
 $cart = new Cart($pdo);
-    if($user->isTokenValid($token)) {
+    if($user->IsTokenValid($token)) {
         $carts = $cart->checkoutCart($token);
         print_r(json_encode($carts));
     

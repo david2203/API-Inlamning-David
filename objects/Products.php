@@ -13,8 +13,22 @@ class Product {
         $this->database_connection = $db;
     }
 
-    function addProduct($name_IN,$description_IN,$image_IN,$category_IN,$price_IN) {
+    function AddProduct($name_IN,$description_IN,$image_IN,$category_IN,$price_IN) {
         if(!empty($name_IN)&& !empty($description_IN)&& !empty($image_IN)&& !empty($category_IN)&& !empty($price_IN)){
+
+            $sql = "SELECT name,description,image,category,price FROM products WHERE name = :name_IN AND description = :description_IN AND image = :image_IN AND category = :category_IN AND price = :price_IN ";
+            $stmt = $this->database_connection->prepare($sql);
+            $stmt->bindParam(":name_IN", $name_IN);
+            $stmt->bindParam(":description_IN", $description_IN);
+            $stmt->bindParam(":image_IN", $image_IN);
+            $stmt->bindParam(":category_IN", $category_IN);
+            $stmt->bindParam(":price_IN", $price_IN);
+            $stmt->execute();
+            $response = new stdClass();
+            if($stmt->rowCount() > 0) {
+                $response->text = "This product is already added!";
+            return $response;
+            }
 
             $sql = "INSERT INTO products (name,description,image,category,price) VALUES(:name_IN, :description_IN, :image_IN, :category_IN, :price_IN)";
             $stmt = $this->database_connection->prepare($sql);
@@ -27,7 +41,10 @@ class Product {
             if(!$stmt->execute()) {
                 echo "Could not create post!";
             }
-
+            else {
+                $response->text = "Product added!";
+                return $response;
+            }
             
         } else {
             $error = new stdClass();
@@ -39,34 +56,43 @@ class Product {
 
     }
 
-    function deleteProduct($productId) {
+    function DeleteProduct($productId) {
+
+        $sql = "SELECT productId FROM cart WHERE productId = :productId_IN";
+        $stmt = $this->database_connection->prepare($sql);
+        $stmt->bindParam(":productId_IN", $productId);
+        $stmt->execute();
+        $response = new stdClass();
+            if($stmt->rowCount() > 0) {
+                $response->text = "This product cant be deleted because its added by a user to their shoppingcart!";
+            return $response;
+            }
+
         $sql = "DELETE FROM products WHERE id = :productId_IN";
         $stmt = $this->database_connection->prepare($sql);
         $stmt->bindParam(":productId_IN", $productId);
         $stmt->execute();
 
         
-        $response = new stdClass();
+        
                 if($stmt->rowCount() > 0) {
                     $response->text = "Product with id $productId removed!";
                 return $response;
-
-        
-    }
+        }
 
         $response->text = "No product with id=$productId was found!";
                 return $response;
 
     }
     
-    function listProducts() {
+    function ListProducts() {
         $sql = "SELECT name, description, image, category, price FROM products";
         $stmt = $this->database_connection->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    function showSpecific($productId) {
+    function ShowSpecific($productId) {
         $sql = "SELECT name, description, image, category, price FROM products WHERE id = :id_IN";
         $stmt = $this->database_connection->prepare($sql);
         $stmt->bindParam(":id_IN", $productId);
@@ -91,9 +117,24 @@ class Product {
       
     }
 
-    function editProduct($id, $name ="", $description = "", $image = "", $category = "", $price = "") {
+    function EditProduct($id, $name ="", $description = "", $image = "", $category = "", $price = "") {
+ 
+        $sql = "SELECT name,description,image,category,price FROM products WHERE name = :name_IN OR description = :description_IN OR image = :image_IN OR category = :category_IN OR price = :price_IN ";
+            $stmt = $this->database_connection->prepare($sql);
+            $stmt->bindParam(":name_IN", $name);
+            $stmt->bindParam(":description_IN", $description);
+            $stmt->bindParam(":image_IN", $image);
+            $stmt->bindParam(":category_IN", $category);
+            $stmt->bindParam(":price_IN", $price);
+            $stmt->execute();
+            $response = new stdClass();
+            if($stmt->rowCount() > 0) {
+                $response->text = "Atleast one of the 'to be edited' data is not new!";
+            return $response;
+            }
+
+
         $error = new stdClass();
-            
         if(!empty($name)) {
             $error->message = $this->UpdateName($id, $name);
         }
@@ -184,15 +225,17 @@ class Product {
         }
     }
 
-    function showByCat($category_IN){
+    function ShowByCat($category_IN){
         $sql = "SELECT * FROM products WHERE category LIKE :category_IN";
         $stmt = $this->database_connection->prepare($sql);
         $stmt->bindParam(":category_IN", $category_IN);
         $stmt->execute();
         $productCount = $stmt->rowCount();
-        if($productCount = 0) {
-            echo "No products of this category found!";
-            die();
+        if($productCount < 1) {
+            
+            $response = new stdClass();
+            $response->text = "No product with this category found!";
+            return $response;
         }
         $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return json_encode($row);
