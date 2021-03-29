@@ -27,7 +27,7 @@ class Product {
             $response = new stdClass();
             if($stmt->rowCount() > 0) {
                 $response->text = "This product is already added!";
-            return $response;
+                return $response;
             }
 
             $sql = "INSERT INTO products (name,description,image,category,price) VALUES(:name_IN, :description_IN, :image_IN, :category_IN, :price_IN)";
@@ -39,7 +39,11 @@ class Product {
             $stmt->bindParam(":price_IN", $price_IN);
 
             if(!$stmt->execute()) {
-                echo "Could not create post!";
+                $error = new stdClass();
+                    $error->message ="Couldnt create post!";
+                    $error->code="000?";
+                    print_r(json_encode($error));
+                    die();
             }
             else {
                 $response->text = "Product added!";
@@ -62,10 +66,13 @@ class Product {
         $stmt = $this->database_connection->prepare($sql);
         $stmt->bindParam(":productId_IN", $productId);
         $stmt->execute();
-        $response = new stdClass();
+
             if($stmt->rowCount() > 0) {
-                $response->text = "This product cant be deleted because its added by a user to their shoppingcart!";
-            return $response;
+                $error = new stdClass();
+                    $error->message = "This product cant be deleted because its added by a user to their shoppingcart!";
+                    $error->code="000?";
+                    print_r(json_encode($error));
+                    die();
             }
 
         $sql = "DELETE FROM products WHERE id = :productId_IN";
@@ -75,13 +82,18 @@ class Product {
 
         
         
-                if($stmt->rowCount() > 0) {
-                    $response->text = "Product with id $productId removed!";
+        if($stmt->rowCount() > 0) {
+            $response = new stdClass();
+                $response->text = "Product with id $productId removed!";
                 return $response;
         }
-
-        $response->text = "No product with id=$productId was found!";
-                return $response;
+        else {
+            $error = new stdClass();
+                $error->message = "No product with id=$productId was found!";
+                $error->code = "0003";
+                print_r(json_encode($error));
+                die();   
+        }     
 
     }
     
@@ -127,10 +139,14 @@ class Product {
             $stmt->bindParam(":category_IN", $category);
             $stmt->bindParam(":price_IN", $price);
             $stmt->execute();
-            $response = new stdClass();
+            
             if($stmt->rowCount() > 0) {
-                $response->text = "Atleast one of the 'to be edited' data is not new!";
-            return $response;
+                $error = new stdClass();
+                $error->message = "Atleast one of the 'to be edited' data is not new!";
+                $error->code = "000?";
+                echo json_encode($error);
+                die();
+               
             }
 
 
@@ -233,9 +249,11 @@ class Product {
         $productCount = $stmt->rowCount();
         if($productCount < 1) {
             
-            $response = new stdClass();
-            $response->text = "No product with this category found!";
-            return $response;
+            $error = new stdClass();
+            $error->message = "No product with this category found!";
+            $error->code = "000?";
+            print_r(json_encode($error));
+            die();
         }
         $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return json_encode($row);

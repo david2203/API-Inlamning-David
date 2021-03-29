@@ -60,12 +60,16 @@ class Cart {
         
         if(!$stmt->execute()) {
             $error = new stdClass();
-                $error->message = "Id not found!";
-                $error->code = "0003";
+                $error->message = "Exectute fail";
+                $error->code = "000?";
                 echo json_encode($error);
                 die();
         }
-        return " $quantity_IN x of the product with id $productId_IN was added to your cart!";
+        else if($stmt->execute()){
+            $response =  new stdClass();
+            $response->text= "$quantity_IN x of the product with id $productId_IN was added to your cart!";
+            return $response;
+        }
 
     }
 
@@ -88,11 +92,12 @@ class Cart {
         $stmt = $this->database_connection->prepare($sql);
         $stmt->bindParam(":userId_IN", $userId_IN);
         $stmt->bindParam(":productId_IN", $productId_IN);
-        $stmt->execute();
         
-        $response =  new stdClass();
-        $response->text= "Product with id $productId_IN was removed from your cart!";
-        return $response;   
+        if($stmt->execute()){
+            $response =  new stdClass();
+            $response->text= "Product with id $productId_IN was removed from your cart!";
+            return $response;
+        }  
     }
 
     function CheckoutCart($token_IN) {
@@ -101,7 +106,9 @@ class Cart {
         $stmt->bindParam(":token_IN",$token_IN);
 
         if($stmt->execute()) {
-            return "Purchase complete!";
+            $response =  new stdClass();
+            $response->text = "Purchase complete!";
+            return $response;
         }
     }
     

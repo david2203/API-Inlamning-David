@@ -5,6 +5,7 @@ Welcome to Davids API system! Before using this service please go to your databa
 2. Then you can use the php functions that are in the v1 folder by adding them after the url above in the webbrowser! The functions differ between user related, product related and cart related!
 3. You will have to add different kinds of information according to what function you have selected in order for them to work! This is done by setting GET variables in the url after the selected function!
 4. Now you should have all means to user all the existing functions with ease :) but keep in mind that the prefered order to use this API is if you start by registering, then logging in, then adding a few products and at the end fullfill a purchase by adding and removing products from your cart and then checkout wanted items. Enjoy!
+5. I just want to add that if something goes wrong you will get an error message (codewise) and if anything is successfull you will get a response!
 
 
 SQL questions starts here: 

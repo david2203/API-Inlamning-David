@@ -43,9 +43,15 @@ class User {
             $stmt->bindParam(":role_IN", $role_IN);
 
             if(!$stmt->execute()){
-                echo "something went wrong!";
+                $error = new stdClass();
+                $error->message = "Exectute fail";
+                $error->code = "000?";
+                echo json_encode($error);
+                die();
             } else {
-                echo "User added!";
+                $response =  new stdClass();
+                    $response->text= "User added!";
+                    return $response;
             }
 
         }
