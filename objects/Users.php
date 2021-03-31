@@ -39,7 +39,10 @@ class User {
             $stmt = $this->database_connection->prepare($sql);
             $stmt->bindParam(":username_IN", $username_IN);
             $stmt->bindParam(":email_IN", $email_IN);
-            $stmt->bindParam(":password_IN", $password_IN);
+            $salt1 = "aGsdf45L";
+            $salt2 = "Suasg25R";
+            $kryptPass = md5($salt1.$password_IN.$salt2);
+            $stmt->bindParam(":password_IN", $kryptPass);
             $stmt->bindParam(":role_IN", $role_IN);
 
              if($stmt->execute()){
@@ -63,7 +66,10 @@ class User {
         $sql = "SELECT id, username, email, role FROM users WHERE username=:username_IN AND password=:password_IN";
         $stmt=$this->database_connection->prepare($sql);
         $stmt->bindParam(":username_IN",$username_IN);
-        $stmt->bindParam(":password_IN",$password_IN);
+        $salt1 = "aGsdf45L";
+        $salt2 = "Suasg25R";
+        $kryptPass = md5($salt1.$password_IN.$salt2);
+        $stmt->bindParam(":password_IN",$kryptPass);
 
         $stmt->execute();
 
