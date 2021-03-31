@@ -42,13 +42,7 @@ class User {
             $stmt->bindParam(":password_IN", $password_IN);
             $stmt->bindParam(":role_IN", $role_IN);
 
-            if(!$stmt->execute()){
-                $error = new stdClass();
-                $error->message = "Exectute fail";
-                $error->code = "000?";
-                echo json_encode($error);
-                die();
-            } else {
+             if($stmt->execute()){
                 $response =  new stdClass();
                     $response->text= "User added!";
                     return $response;

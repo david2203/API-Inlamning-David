@@ -17,7 +17,7 @@ if(isset($_GET['name']) && isset($_GET['description']) && isset($_GET['imageurl'
     print_r(json_encode($error));
     die();
 }
-
+?>
 
 
 ?>

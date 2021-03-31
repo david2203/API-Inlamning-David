@@ -38,16 +38,15 @@ class Product {
             $stmt->bindParam(":category_IN", $category_IN);
             $stmt->bindParam(":price_IN", $price_IN);
 
-            if(!$stmt->execute()) {
-                $error = new stdClass();
-                    $error->message ="Couldnt create post!";
-                    $error->code="000?";
-                    print_r(json_encode($error));
-                    die();
-            }
-            else {
+            if($stmt->execute()) {
                 $response->text = "Product added!";
                 return $response;
+            } else {
+                $error = new stdClass();
+                    $error->message ="Couldnt create post!";
+                    $error->code="0008";
+                    print_r(json_encode($error));
+                    die();
             }
             
         } else {
@@ -70,7 +69,7 @@ class Product {
             if($stmt->rowCount() > 0) {
                 $error = new stdClass();
                     $error->message = "This product cant be deleted because its added by a user to their shoppingcart!";
-                    $error->code="000?";
+                    $error->code="0011";
                     print_r(json_encode($error));
                     die();
             }
@@ -143,7 +142,7 @@ class Product {
             if($stmt->rowCount() > 0) {
                 $error = new stdClass();
                 $error->message = "Atleast one of the 'to be edited' data is not new!";
-                $error->code = "000?";
+                $error->code = "0012";
                 echo json_encode($error);
                 die();
                
@@ -251,7 +250,7 @@ class Product {
             
             $error = new stdClass();
             $error->message = "No product with this category found!";
-            $error->code = "000?";
+            $error->code = "0003";
             print_r(json_encode($error));
             die();
         }

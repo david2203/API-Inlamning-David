@@ -17,4 +17,5 @@ if(isset($_GET['username'])&&isset($_GET['password'])){
     print_r(json_encode($error));
     die();
 }
+?>
 

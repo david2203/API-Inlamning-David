@@ -58,14 +58,7 @@ class Cart {
         $stmt->bindParam(":quantity_IN",$quantity_IN);
         $stmt->bindParam(":token_IN",$token_IN);
         
-        if(!$stmt->execute()) {
-            $error = new stdClass();
-                $error->message = "Exectute fail";
-                $error->code = "000?";
-                echo json_encode($error);
-                die();
-        }
-        else if($stmt->execute()){
+        if($stmt->execute()){
             $response =  new stdClass();
             $response->text= "$quantity_IN x of the product with id $productId_IN was added to your cart!";
             return $response;

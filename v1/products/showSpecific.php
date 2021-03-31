@@ -14,3 +14,5 @@ if(!empty($_GET['id'])) {
     echo json_encode($error);
     die();
 }
+
+?>

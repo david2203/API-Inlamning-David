@@ -26,5 +26,5 @@ $cart = new Cart($pdo);
         $error->code = "0010";
         print_r(json_encode($error));
     }
-
+?>
 

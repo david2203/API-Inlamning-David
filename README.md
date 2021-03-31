@@ -10,7 +10,8 @@ Welcome to Davids API system! Before using this service please go to your databa
 
 SQL questions starts here: 
 
-DROP DATABASE IF EXISTS APIendpoints; CREATE DATABASE APIendpoints;
+DROP DATABASE IF EXISTS APIendpoints;
+CREATE DATABASE APIendpoints;
 
 DROP TABLE IF EXISTS sessions;
 DROP TABLE IF EXISTS cart;
