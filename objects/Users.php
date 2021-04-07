@@ -3,10 +3,7 @@
 class User {
 
     private $database_connection;
-    private $username;
-    private $email;
-    private $password;
-    private $role;
+    
 
     function __construct($db) {
         $this->database_connection = $db;

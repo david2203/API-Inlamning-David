@@ -3,11 +3,7 @@
 class Product {
 
     private $database_connection;
-    private $name;
-    private $description;
-    private $image;
-    private $category;
-    private $price;
+    
 
     function __construct($db) {
         $this->database_connection = $db;
