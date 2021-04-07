@@ -1,5 +1,5 @@
 <?php 
-
+//class to be accesed by userhandeling-endpoints
 class User {
 
     private $database_connection;

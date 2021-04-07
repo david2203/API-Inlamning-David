@@ -1,5 +1,5 @@
 <?php
-
+//class to be accesed by producthandeling-endpoints
 class Product {
 
     private $database_connection;

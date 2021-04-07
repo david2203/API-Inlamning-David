@@ -1,5 +1,12 @@
 # API-Inlamning-David
+--->For Developers
+I have used the following code-rules:
+1. Functions are written by starting with capital letter and then every new word also starting with a capital letter. --> function CapitalLetters()
+2. Errors come with codes and can be filtered accordingly in the search field. (like "0001" = user information requierment isnt fullfilled! )
+3. 
 
+
+--->For Users
 Welcome to Davids API system! Before using this service please go to your database editor and create a databse with the sql question that you can find below! After you have done that you can start using the service by following the following instructions: 
 1. Go to your webb browser and type http://localhost/API_Inla%CC%88mning/v1/
 2. Then you can use the php functions that are in the v1 folder by adding them after the url above in the webbrowser! The functions differ between user related, product related and cart related!

@@ -1,5 +1,5 @@
 <?php
-
+//class to be accesed by shoppingcart-endpoints
 class Cart {
 
     private $database_connection;
