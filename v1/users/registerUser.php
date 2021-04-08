@@ -15,5 +15,6 @@ if(isset($_GET['username']) && isset($_GET['email']) && isset($_GET['password'])
 }
 
 $user = new User($pdo);
-$user->AddUser($username,$email,$password);
+print_r(json_encode($user->AddUser($username,$email,$password)));
+
 ?>

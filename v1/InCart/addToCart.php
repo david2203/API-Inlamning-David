@@ -40,6 +40,4 @@ $cart = new Cart($pdo);
         print_r(json_encode($error));
     }
 
-
-
 ?>

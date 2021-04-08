@@ -2,9 +2,8 @@
 --->For Developers
 I have used the following code-rules:
 1. Functions are written by starting with capital letter and then every new word also starting with a capital letter. --> function CapitalLetters()
-2. Errors come with codes and can be filtered accordingly in the search field. (like "0001" = user information requierment isnt fullfilled! )
-3. 
-
+2. Errors come with codes and can be filtered accordingly in the search field. (like "0001" = user information requierment isnt fullfilled! ) and Errors are return in json format ("json_encode()")
+3. Included() files for API like endpoints are written in the top of each php file. (include("../...")).
 
 --->For Users
 Welcome to Davids API system! Before using this service please go to your database editor and create a databse with the sql question that you can find below! After you have done that you can start using the service by following the following instructions: 
